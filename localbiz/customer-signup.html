@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Customer Account | Localbiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #2196f3, #0d47a1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            color: black;
+            padding: 40px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            text-align: center;
+            color: #2196f3;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2196f3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #1976d2;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 480px) {
+            .card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Create Account</h2>
+        <input type="text" id="name" placeholder="Full Name">
+        <input type="email" id="email" placeholder="Email Address">
+        <button onclick="register()">Register</button>
+    </div>
+
+    <script>
+        function register() {
+            let name = document.getElementById("name").value.trim().toLowerCase();
+            let email = document.getElementById("email").value.trim().toLowerCase();
+
+            if (name === "" || email === "") {
+                alert("All fields are required");
+                return;
+            }
+
+            let customers = JSON.parse(localStorage.getItem("customers")) || {};
+
+            if (customers[email]) {
+                alert("Account already exists. Please login.");
+                return;
+            }
+
+            // Generate password
+            let password = name + "@123";
+
+            customers[email] = {
+                name: name,
+                password: password
+            };
+
+            localStorage.setItem("customers", JSON.stringify(customers));
+
+            alert("Account Created Successfully!\n\nUsername: " + email + "\nPassword: " + password);
+
+            window.location.href = "customer-login.html";
+        }
+    </script>
+</body>
+</html>

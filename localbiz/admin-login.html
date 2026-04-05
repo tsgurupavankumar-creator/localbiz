@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Login | Localbiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+            background: url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d') no-repeat center center/cover;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 20px;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            top: 0;
+            left: 0;
+        }
+
+        .card {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            color: white;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        p {
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 25px;
+            opacity: 0.8;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 30px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 30px;
+            background: #ff9800;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #e68900;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+        .footer a {
+            color: #ff9800;
+            text-decoration: none;
+        }
+
+        .error-message {
+            color: #ff9800;
+            font-size: 12px;
+            margin-top: 10px;
+            text-align: center;
+            background: rgba(0,0,0,0.5);
+            padding: 8px;
+            border-radius: 10px;
+        }
+
+        .demo-box {
+            margin-top: 20px;
+            padding: 12px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .demo-box h4 {
+            margin-bottom: 8px;
+            color: #ff9800;
+        }
+
+        .demo-box p {
+            margin: 3px 0;
+            font-size: 11px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Business Portal</h2>
+        <p>Manage your appointments and customers</p>
+
+        <input type="text" id="username" placeholder="Username (e.g., ramesh)">
+        <input type="password" id="password" placeholder="Password">
+        <div id="errorMsg" class="error-message"></div>
+
+        <button onclick="login()">Login</button>
+
+        <div class="footer">
+            New Business? <a href="admin-signup.html">Register Here</a>
+        </div>
+
+    <script>
+        // FORCE SET BUSINESSES ON PAGE LOAD - GUARANTEED TO WORK
+        window.onload = function() {
+            // Create default businesses
+            const defaultBusinesses = {
+                "ramesh": { 
+                    password: "ramesh@salon", 
+                    type: "Salon" 
+                },
+                "suresh": { 
+                    password: "suresh@doctor", 
+                    type: "Doctor" 
+                },
+                "anita": { 
+                    password: "anita@boutique", 
+                    type: "Boutique" 
+                },
+                "karthik": { 
+                    password: "karthik@fitness", 
+                    type: "Fitness Trainer" 
+                }
+            };
+            
+            // Set in localStorage
+            localStorage.setItem("businesses", JSON.stringify(defaultBusinesses));
+            console.log("Businesses set:", defaultBusinesses);
+            console.log("Businesses in localStorage:", localStorage.getItem("businesses"));
+        };
+
+        function login() {
+            let username = document.getElementById("username").value.trim().toLowerCase();
+            let password = document.getElementById("password").value.trim();
+            let errorMsgDiv = document.getElementById("errorMsg");
+            
+            // Clear previous error
+            errorMsgDiv.innerHTML = "";
+            
+            if (username === "" || password === "") {
+                errorMsgDiv.innerHTML = "❌ Please enter both Username and Password";
+                return;
+            }
+            
+            // Get businesses from localStorage
+            let businesses = JSON.parse(localStorage.getItem("businesses"));
+            
+            // Check if businesses exist
+            if (!businesses) {
+                errorMsgDiv.innerHTML = "❌ No business accounts found. Please refresh the page.";
+                return;
+            }
+            
+            // Check if username exists
+            if (businesses[username]) {
+                if (businesses[username].password === password) {
+                    // Login successful
+                    localStorage.setItem("loggedBusiness", username);
+                    alert("Login successful! Welcome " + username);
+                    window.location.href = "admin-dashboard.html";
+                } else {
+                    errorMsgDiv.innerHTML = "❌ Wrong password! Try: " + businesses[username].password;
+                }
+            } else {
+                errorMsgDiv.innerHTML = "❌ Username not found! Available: " + Object.keys(businesses).join(", ");
+            }
+        }
+        
+        // Enter key support
+        document.getElementById("password").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") login();
+        });
+        document.getElementById("username").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") login();
+        });
+    </script>
+</body>
+</html>

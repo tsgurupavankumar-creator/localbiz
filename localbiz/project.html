@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalBiz | Smart Booking Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', 'Poppins', Arial, sans-serif;
+            background: url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d') no-repeat center center/cover;
+            color: white;
+            text-align: center;
+            min-height: 100vh;
+        }
+
+        .overlay {
+            background: rgba(0, 0, 0, 0.75);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, #ff9800);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 2px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        button {
+            padding: 14px 32px;
+            margin: 10px;
+            border: none;
+            border-radius: 50px;
+            background: #ff9800;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background: #e68900;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            p { font-size: 1rem; }
+            button { padding: 12px 24px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <h1>LocalBiz</h1>
+        <p>Smart Appointment & Service Management Platform</p>
+        <button onclick="location.href='admin-login.html'">Business Login</button>
+        <button onclick="location.href='customer-login.html'">Customer Login</button>
+    </div>
+</body>
+</html>

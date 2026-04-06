@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard | Localbiz</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: url('https://images.unsplash.com/photo-1492724441997-5dc865305da7') no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 20px;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 0;
+        }
+
+        .dashboard {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1100px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 40px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            color: white;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h2 {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .logout {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 30px;
+            background: #f44336;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+
+        .logout:hover {
+            background: #c62828;
+            transform: scale(1.05);
+        }
+
+        .section-title {
+            margin: 20px 0 10px;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            box-shadow: 0 0 0 2px #4CAF50;
+        }
+
+        .bookBtn {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .bookBtn:hover {
+            background: #2e7d32;
+            transform: scale(1.05);
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.18);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+        }
+
+        .status {
+            font-weight: 600;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .approved {
+            background: rgba(76, 175, 80, 0.3);
+            color: #4CAF50;
+        }
+
+        .pending {
+            background: rgba(255, 193, 7, 0.3);
+            color: #FFC107;
+        }
+
+        .rejected {
+            background: rgba(244, 67, 54, 0.3);
+            color: #f44336;
+        }
+
+        .no-data {
+            opacity: 0.8;
+            text-align: center;
+            margin-top: 20px;
+            padding: 40px;
+        }
+
+        hr {
+            margin: 25px 0;
+            border: 0.5px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .validation-message {
+            color: #ff9800;
+            font-size: 12px;
+            margin-top: -5px;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .info-message {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin: 5px 0;
+            color: #ff9800;
+        }
+
+        .rejection-box {
+            background: rgba(244, 67, 54, 0.2);
+            border-left: 3px solid #f44336;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 0.85rem;
+        }
+
+        .rejection-box strong {
+            color: #ff9800;
+        }
+
+        .approval-box {
+            background: rgba(76, 175, 80, 0.2);
+            border-left: 3px solid #4CAF50;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+        }
+
+        .appointment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .business-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ff9800;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .stat-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 24px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard { padding: 25px; }
+            header h2 { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <header>
+            <h2 id="welcome"></h2>
+            <button class="logout" onclick="logout()">Logout</button>
+        </header>
+
+        <!-- Booking Section -->
+        <h3 class="section-title">📅 Book New Appointment</h3>
+        <select id="business" onchange="updateBusinessHours()">
+            <option value="" required>Choose business</option>
+            <option value="ramesh">Ramesh (Salon)</option>
+            <option value="suresh">Suresh (Doctor/Clinic)</option>
+            <option value="anita">Anita (Boutique)</option>
+            <option value="karthik">Karthik (Fitness Trainer)</option>
+        </select>
+        
+        <div id="businessHoursInfo" class="info-message" style="display: none;"></div>
+        
+        <input type="date" id="date" min="">
+        <div id="dateError" class="validation-message"></div>
+        
+        <input type="time" id="time">
+        <div id="timeError" class="validation-message"></div>
+        
+        <textarea id="message" placeholder="Enter service details..."></textarea>
+        <button class="bookBtn" onclick="bookAppointment()">📌 Book Appointment</button>
+        <hr>
+        
+        <!-- Stats Section -->
+        <div class="stats-row" id="statsRow"></div>
+        
+        <!-- Appointments Section -->
+        <h3 class="section-title">📖 Your Appointments</h3>
+        <div id="appointments"></div>
+    </div>
+
+    <script>
+        // Business hours configuration
+        const businessHours = {
+            "ramesh": {
+                name: "Salon",
+                startHour: 9,
+                endHour: 20,
+                message: "⏰ Business Hours: 9:00 AM - 8:00 PM"
+            },
+            "suresh": {
+                name: "Clinic",
+                startHour: 0,
+                endHour: 24,
+                message: "🏥 24/7 Clinic - Open 24 hours! Any time is available."
+            },
+            "anita": {
+                name: "Boutique",
+                startHour: 10,
+                endHour: 19,
+                message: "👗 Business Hours: 10:00 AM - 7:00 PM"
+            },
+            "karthik": {
+                name: "Fitness Trainer",
+                startHour: 6,
+                endHour: 22,
+                message: "💪 Business Hours: 6:00 AM - 10:00 PM"
+            }
+        };
+
+        /* Set minimum date to TODAY (no past dates allowed) */
+        const today = new Date();
+        const todayFormatted = today.toISOString().split('T')[0];
+        
+        // Set the min attribute to today's date
+        document.getElementById("date").setAttribute("min", todayFormatted);
+        
+        // Also set the max attribute if you want to limit future bookings (optional - can go up to 1 year)
+        const maxDate = new Date();
+        maxDate.setFullYear(maxDate.getFullYear() + 1);
+        const maxDateFormatted = maxDate.toISOString().split('T')[0];
+        document.getElementById("date").setAttribute("max", maxDateFormatted);
+
+        /* 🔐 SECURITY CHECK */
+        let email = localStorage.getItem("loggedCustomer");
+
+        if (!email) {
+            alert("Unauthorized Access! Please login.");
+            window.location.href = "customer-login.html";
+        }
+
+        /* Function to refresh data */
+        function refreshData() {
+            location.reload();
+        }
+
+        /* Fetch stored data */
+        let customers = JSON.parse(localStorage.getItem("customers")) || {};
+        let requests = JSON.parse(localStorage.getItem("requests")) || [];
+        let businesses = JSON.parse(localStorage.getItem("businesses")) || {};
+
+        /* Welcome message */
+        let customerName = customers[email]?.name || "Customer";
+        document.getElementById("welcome").innerText = "Welcome, " + customerName.charAt(0).toUpperCase() + customerName.slice(1);
+
+        /* Function to update business hours info */
+        function updateBusinessHours() {
+            let selectedBusiness = document.getElementById("business").value;
+            let infoDiv = document.getElementById("businessHoursInfo");
+            let timeInput = document.getElementById("time");
+            
+            if (selectedBusiness && businessHours[selectedBusiness]) {
+                infoDiv.innerHTML = businessHours[selectedBusiness].message;
+                infoDiv.style.display = "block";
+                document.getElementById("timeError").style.display = "none";
+                timeInput.value = "";
+            } else {
+                infoDiv.style.display = "none";
+            }
+        }
+
+        /* Date Validation Function - Only today and future dates allowed */
+        function isValidDate(selectedDate) {
+            if (!selectedDate) return false;
+            
+            const selected = new Date(selectedDate);
+            const todayDate = new Date();
+            
+            // Reset time to midnight for accurate date comparison
+            todayDate.setHours(0, 0, 0, 0);
+            selected.setHours(0, 0, 0, 0);
+            
+            // Allow today and future dates only
+            return selected >= todayDate;
+        }
+
+        /* Time Validation Function based on Business Type */
+        function isValidTimeForBusiness(selectedTime, businessType) {
+            if (!selectedTime || !businessType) return false;
+            
+            const [hours, minutes] = selectedTime.split(':').map(Number);
+            const timeInMinutes = hours * 60 + minutes;
+            const hoursConfig = businessHours[businessType];
+            if (!hoursConfig) return false;
+            
+            const startTime = hoursConfig.startHour * 60;
+            const endTime = hoursConfig.endHour * 60;
+            
+            // For 24/7 clinic - any time is valid
+            if (hoursConfig.startHour === 0 && hoursConfig.endHour === 24) {
+                return true;
+            }
+            
+            return timeInMinutes >= startTime && timeInMinutes <= endTime;
+        }
+
+        /* Additional validation for same-day time check */
+        function isSameDayTimeValid(selectedDate, selectedTime) {
+            const selectedDateTime = new Date(selectedDate + "T" + selectedTime);
+            const now = new Date();
+            
+            // If booking for today, check if time is in the future
+            const selectedDateOnly = selectedDate;
+            const todayDateOnly = todayFormatted;
+            
+            if (selectedDateOnly === todayDateOnly) {
+                return selectedDateTime > now;
+            }
+            return true;
+        }
+
+        function getBusinessName(businessType) {
+            return businessHours[businessType]?.name || businessType;
+        }
+
+        function formatTime(hour) {
+            if (hour === 0) return "12:00 AM";
+            if (hour === 24) return "11:59 PM";
+            if (hour < 12) return hour + ":00 AM";
+            if (hour === 12) return "12:00 PM";
+            return (hour - 12) + ":00 PM";
+        }
+
+        /* Booking Function with Proper Date Validation */
+        function bookAppointment() {
+            let business = document.getElementById("business").value;
+            let date = document.getElementById("date").value;
+            let time = document.getElementById("time").value;
+            let message = document.getElementById("message").value;
+            
+            // Reset validation messages
+            document.getElementById("dateError").style.display = "none";
+            document.getElementById("timeError").style.display = "none";
+            
+            let hasError = false;
+            
+            // Check if all fields are filled
+            if (!business) {
+                alert("❌ Please select a business.");
+                return;
+            }
+            
+            if (!date) {
+                alert("❌ Please select a date.");
+                return;
+            }
+            
+            if (!time) {
+                alert("❌ Please select a time.");
+                return;
+            }
+            
+            if (!message) {
+                alert("❌ Please enter service details.");
+                return;
+            }
+            
+            // DATE VALIDATION - Only today and future dates allowed
+            if (!isValidDate(date)) {
+                document.getElementById("dateError").innerHTML = "❌ Cannot book appointments for past dates! Please select today or a future date.";
+                document.getElementById("dateError").style.display = "block";
+                hasError = true;
+            }
+            
+            // TIME VALIDATION based on business hours
+            if (!isValidTimeForBusiness(time, business)) {
+                const businessName = getBusinessName(business);
+                const hoursConfig = businessHours[business];
+                const startTimeFormatted = formatTime(hoursConfig.startHour);
+                const endTimeFormatted = formatTime(hoursConfig.endHour);
+                
+                if (hoursConfig.startHour === 0 && hoursConfig.endHour === 24) {
+                    document.getElementById("timeError").innerHTML = `❌ Please select a valid time (24/7 clinic accepts all times).`;
+                } else {
+                    document.getElementById("timeError").innerHTML = `❌ ${businessName} is only open from ${startTimeFormatted} to ${endTimeFormatted}. Please select a time within business hours.`;
+                }
+                document.getElementById("timeError").style.display = "block";
+                hasError = true;
+            }
+            
+            if (hasError) return;
+            
+            // Additional validation: Cannot book a time that has already passed for today
+            if (!isSameDayTimeValid(date, time)) {
+                alert("⚠️ Cannot book appointments for a time that has already passed today!\n\nPlease select a future time or another day.");
+                return;
+            }
+            
+            // All validations passed, proceed with booking
+            let allRequests = JSON.parse(localStorage.getItem("requests")) || [];
+            
+            // Check for duplicate booking (optional - prevent double booking same slot)
+            const duplicateExists = allRequests.some(req => 
+                req.email === email && 
+                req.business === business && 
+                req.date === date && 
+                req.time === time &&
+                req.status !== "Rejected"
+            );
+            
+            if (duplicateExists) {
+                alert("⚠️ You already have a booking for this date and time! Please choose a different slot.");
+                return;
+            }
+            
+            allRequests.push({
+                email: email,
+                business: business,
+                date: date,
+                time: time,
+                message: message,
+                status: "Pending",
+                requestId: Date.now() + "_" + Math.random(),
+                bookedAt: new Date().toLocaleString()
+            });
+
+            localStorage.setItem("requests", JSON.stringify(allRequests));
+            
+            const businessName = getBusinessName(business);
+            alert(`✅ Appointment Booked Successfully!\n\n🏢 Business: ${businessName}\n📅 Date: ${date}\n⏰ Time: ${time}\n\nStatus: Pending Approval`);
+            
+            refreshData();
+        }
+
+        /* Display Stats - Including Rejected Count */
+        function displayStats() {
+            let myAppointments = requests.filter(r => r.email === email);
+            let total = myAppointments.length;
+            let pending = myAppointments.filter(r => r.status === "Pending").length;
+            let approved = myAppointments.filter(r => r.status === "Approved").length;
+            let rejected = myAppointments.filter(r => r.status === "Rejected").length;
+            
+            document.getElementById("statsRow").innerHTML = `
+                <div class="stat-badge">📊 Total: ${total}</div>
+                <div class="stat-badge">⏳ Pending: ${pending}</div>
+                <div class="stat-badge">✅ Approved: ${approved}</div>
+                <div class="stat-badge" style="background: rgba(244, 67, 54, 0.3);">❌ Rejected: ${rejected}</div>
+            `;
+        }
+
+        /* Display Appointments with Rejection Reason */
+        function displayAppointments() {
+            let myAppointments = requests.filter(r => r.email === email);
+            let container = document.getElementById("appointments");
+
+            if (myAppointments.length === 0) {
+                container.innerHTML = `<div class="no-data">📭 You have not booked any appointments yet.<br><br>📅 Book your first appointment above!</div>`;
+                return;
+            }
+            
+            // Sort appointments by date (newest first)
+            myAppointments.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            let html = "";
+            myAppointments.forEach(r => {
+                let statusClass = "";
+                let statusText = "";
+                if (r.status === "Approved") {
+                    statusClass = "approved";
+                    statusText = "✅ Approved";
+                } else if (r.status === "Rejected") {
+                    statusClass = "rejected";
+                    statusText = "❌ Rejected";
+                } else {
+                    statusClass = "pending";
+                    statusText = "⏳ Pending Approval";
+                }
+                
+                // Check if appointment date is in the past
+                const appointmentDate = new Date(r.date);
+                const todayDate = new Date();
+                todayDate.setHours(0, 0, 0, 0);
+                const isPastAppointment = appointmentDate < todayDate;
+                const pastWarning = isPastAppointment && r.status !== "Approved" ? " ⚠️ (Past Date)" : "";
+                
+                const businessDisplayName = businessHours[r.business]?.name || r.business.toUpperCase();
+                
+                let rejectionHtml = "";
+                if (r.status === "Rejected" && r.rejectionReason) {
+                    rejectionHtml = `
+                        <div class="rejection-box">
+                            <strong>❌ Rejection Reason:</strong><br>
+                            ${r.rejectionReason}<br>
+                            ${r.rejectedAt ? `<small style="opacity: 0.7;">Rejected on: ${r.rejectedAt}</small>` : ''}
+                        </div>
+                    `;
+                }
+                
+                let approvalHtml = "";
+                if (r.status === "Approved" && r.approvedAt) {
+                    approvalHtml = `
+                        <div class="approval-box">
+                            ✅ Approved on: ${r.approvedAt}
+                        </div>
+                    `;
+                }
+                
+                html += `
+                    <div class="card">
+                        <div class="appointment-header">
+                            <span class="business-name">🏢 ${businessDisplayName}</span>
+                            <span class="status ${statusClass}">${statusText}</span>
+                        </div>
+                        <p><strong>📅 Date:</strong> ${r.date}${pastWarning}</p>
+                        <p><strong>⏰ Time:</strong> ${r.time}</p>
+                        <p><strong>📝 Message:</strong> ${r.message}</p>
+                        ${approvalHtml}
+                        ${rejectionHtml}
+                        <p style="margin-top: 10px; font-size: 0.7rem; opacity: 0.6;">📌 Booked on: ${r.bookedAt || 'N/A'}</p>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        /* Live date validation - Prevent selecting past dates */
+        document.getElementById("date").addEventListener("change", function() {
+            const selectedDate = this.value;
+            const dateError = document.getElementById("dateError");
+            
+            if (selectedDate && !isValidDate(selectedDate)) {
+                dateError.innerHTML = "❌ Cannot select past dates! Please choose today or a future date.";
+                dateError.style.display = "block";
+                this.value = "";
+            } else {
+                dateError.style.display = "none";
+            }
+        });
+        
+        /* Live time validation with business hours */
+        document.getElementById("time").addEventListener("change", function() {
+            const selectedTime = this.value;
+            const selectedBusiness = document.getElementById("business").value;
+            const timeError = document.getElementById("timeError");
+            
+            if (selectedTime && selectedBusiness) {
+                if (!isValidTimeForBusiness(selectedTime, selectedBusiness)) {
+                    const businessName = getBusinessName(selectedBusiness);
+                    const hoursConfig = businessHours[selectedBusiness];
+                    
+                    if (hoursConfig.startHour === 0 && hoursConfig.endHour === 24) {
+                        timeError.innerHTML = `❌ Please select a valid time (24/7 clinic accepts all times).`;
+                    } else {
+                        const startTimeFormatted = formatTime(hoursConfig.startHour);
+                        const endTimeFormatted = formatTime(hoursConfig.endHour);
+                        timeError.innerHTML = `❌ ${businessName} is only open from ${startTimeFormatted} to ${endTimeFormatted}. Please select a time within business hours.`;
+                    }
+                    timeError.style.display = "block";
+                    this.value = "";
+                } else {
+                    timeError.style.display = "none";
+                }
+            } else if (selectedTime && !selectedBusiness) {
+                timeError.innerHTML = "❌ Please select a business first to see available time slots.";
+                timeError.style.display = "block";
+                this.value = "";
+            } else {
+                timeError.style.display = "none";
+            }
+        });
+
+        /* Business selection reminder */
+        document.getElementById("business").addEventListener("change", function() {
+            const timeInput = document.getElementById("time");
+            if (timeInput.value) {
+                // If time was already selected, revalidate it
+                const event = new Event('change');
+                timeInput.dispatchEvent(event);
+            }
+        });
+
+        /* Initial display */
+        displayStats();
+        displayAppointments();
+
+        /* Logout */
+        function logout() {
+            localStorage.removeItem("loggedCustomer");
+            window.location.href = "index.html";
+        }
+        
+        console.log("Date validation: Only today and future dates allowed. Min date:", todayFormatted);
+    </script>
+</body>
+</html>

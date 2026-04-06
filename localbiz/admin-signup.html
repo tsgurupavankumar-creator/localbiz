@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Signup - Localbiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', 'Poppins', sans-serif;
+            background: url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d') no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .overlay {
+            background: rgba(0, 0, 0, 0.75);
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+        }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            animation: fadeIn 1s ease-in-out;
+            margin: 40px 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #2a5298;
+            margin-bottom: 5px;
+        }
+
+        .tagline {
+            text-align: center;
+            font-size: 14px;
+            color: gray;
+            margin-bottom: 25px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 5px rgba(42, 82, 152, 0.4);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #2a5298;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #1e3c72;
+            transform: scale(1.02);
+        }
+
+        .note {
+            font-size: 12px;
+            color: #777;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <div class="container">
+            <h1>Register Your Business</h1>
+            <p class="tagline">Join TimeBridge & Manage Appointments Professionally</p>
+
+            <input type="text" id="name" placeholder="Business Owner Name (e.g., Ramesh)" required>
+            <input type="text" id="business" placeholder="Business Type (e.g., Saloon, Doctor)" required>
+            <input type="email" id="email" placeholder="Business Email Address" required>
+            <input type="number" id="number" placeholder="Contact Phone Number" required>
+            <textarea id="address" placeholder="Shop Address" required></textarea>
+            <input type="text" id="timing" placeholder="Shop Timings (e.g., 9AM - 8PM)" required>
+            <input type="text" id="map" placeholder="Google Map Link (Optional)">
+
+            <button type="button" onclick="registerBusiness()">Register Business</button>
+
+            <p class="note">
+                After verification, your login will be:<br>
+                Username = Your Name (lowercase)<br>
+                Password = name@business
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function registerBusiness() {
+            let name = document.getElementById("name").value.trim();
+            let business = document.getElementById("business").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let number = document.getElementById("number").value.trim();
+            let address = document.getElementById("address").value.trim();
+            let timing = document.getElementById("timing").value.trim();
+            let map = document.getElementById("map").value.trim();
+
+            if (name == "" || business == "" || email == "" || number == "" || address == "" || timing == "") {
+                alert("Please fill all required fields!");
+                return;
+            }
+
+            let username = name.toLowerCase();
+            let password = name.toLowerCase() + "@" + business.toLowerCase();
+
+            let newBusiness = {
+                name: name,
+                business: business,
+                email: email,
+                number: number,
+                address: address,
+                timing: timing,
+                map: map,
+                username: username,
+                password: password,
+                verified: false
+            };
+
+            localStorage.setItem("newBusiness", JSON.stringify(newBusiness));
+
+            window.location.href = "admin_verification.html";
+        }
+    </script>
+</body>
+</html>
